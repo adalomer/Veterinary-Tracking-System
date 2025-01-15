@@ -41,24 +41,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="container">
-        <h1>Register</h1>
+        <h1>Kullanıcı kayıt</h1>
         <?php 
         if (isset($error)) echo "<p class='error'>$error</p>";
         if (isset($success)) echo "<p class='success'>$success</p>";
         ?>
         <form action="register.php" method="post">
-            <label for="username">Username:</label>
+            <label for="username">Kullancı Adı:</label>
             <input type="text" id="username" name="username" required>
 
-            <label for="password">Password:</label>
+            <label for="password">Şifre:</label>
             <input type="password" id="password" name="password" required>
 
-            <label for="confirm_password">Confirm Password:</label>
+            <label for="confirm_password">Şifreyi tekrar gir:</label>
             <input type="password" id="confirm_password" name="confirm_password" required>
 
-            <input type="submit" value="Register">
-            <a href="login.php">Back to Login</a>
+            <input type="submit" value="Kayıt ol">
+            <a href="login.php"class="register-button">Giriş sayfası</a>
         </form>
     </div>
+	<footer>
+        <p>&copy; 2025 Ömer Ali Adalı tarafından tasarlandı.</p>
+    </footer>
 </body>
 </html>

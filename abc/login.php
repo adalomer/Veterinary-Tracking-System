@@ -35,23 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Veterinary Tracking System</title>
+    <title>Giriş - Veteriner Takip Sistemi</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <h1>Veteriner takip sistemi - Giriş</h1>
         <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
         <form action="login.php" method="post">
-            <label for="username">Username:</label>
+            <label for="username">Kullanıcı adı:</label>
             <input type="text" id="username" name="username" required>
 
-            <label for="password">Password:</label>
+            <label for="password">Şifre:</label>
             <input type="password" id="password" name="password" required>
 
-            <input type="submit" value="Login">
-            <a href="register.php">Register</a>
+            <input type="submit" value="Giriş">
+            <a href="register.php" class="register-button">Kayıt ol</a>
         </form>
     </div>
+	<footer>
+        <p>&copy; 2025 Ömer Ali Adalı tarafından tasarlandı.</p>
+    </footer>
 </body>
 </html>
+

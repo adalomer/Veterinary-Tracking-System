@@ -28,51 +28,54 @@ $pets = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pet Data - Veterinary Tracking System</title>
+    <title>Hayvan bilgileri - Veterine takip sistemi</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="data.php">Pet Data</a></li>
-                <li><a href="examinations.php">Examinations</a></li>
-                <li><a href="login.php?logout=1">Logout</a></li>
+                <li><a href="index.php">Ana Sayfa</a></li>
+                <li><a href="data.php">Hayvan Bilgileri</a></li>
+                <li><a href="examinations.php">Muayene Kayıtları</a></li>
+                <li><a href="login.php?logout=1">Çıkış yap</a></li>
             </ul>
         </nav>
     </header>
     <div class="container">
-        <h1>Pet Data Management</h1>
+        <h1>Hayvan bilgi yönetimi</h1>
         <form action="data.php" method="post">
-            <label for="pet_name">Pet Name:</label>
+            <label for="pet_name">Hayvan ismi:</label>
             <input type="text" id="pet_name" name="pet_name" required>
 
-            <label for="species">Species:</label>
+            <label for="species">Türü:</label>
             <input type="text" id="species" name="species" required>
 
-            <label for="breed">Breed:</label>
+            <label for="breed">Cinsiyeti:</label>
             <input type="text" id="breed" name="breed">
 
-            <label for="age">Age:</label>
+            <label for="age">Yaşı:</label>
             <input type="number" id="age" name="age" required>
 
-            <label for="weight">Weight (kg):</label>
+            <label for="weight">Ağırlığı (kg):</label>
             <input type="number" step="0.1" id="weight" name="weight" required>
 
-            <input type="submit" value="Add Pet">
+            <input type="submit" value="Onayla">
         </form>
 
-        <h2>Your Pets</h2>
+        <h2>Kayıtlı hayvanlarınız</h2>
         <?php foreach ($pets as $pet): ?>
             <div class="pet-card">
                 <h3><?= htmlspecialchars($pet['pet_name']) ?></h3>
-                <p>Species: <?= htmlspecialchars($pet['species']) ?></p>
-                <p>Breed: <?= htmlspecialchars($pet['breed']) ?></p>
-                <p>Age: <?= htmlspecialchars($pet['age']) ?></p>
-                <p>Weight: <?= htmlspecialchars($pet['weight']) ?> kg</p>
+                <p>Türü: <?= htmlspecialchars($pet['species']) ?></p>
+                <p>Cinsiyeti: <?= htmlspecialchars($pet['breed']) ?></p>
+                <p>Yaşı: <?= htmlspecialchars($pet['age']) ?></p>
+                <p>Ağrılığı: <?= htmlspecialchars($pet['weight']) ?> kg</p>
             </div>
         <?php endforeach; ?>
     </div>
+	<footer>
+        <p>&copy; 2025 Ömer Ali Adalı tarafından tasarlandı.</p>
+    </footer>
 </body>
 </html>

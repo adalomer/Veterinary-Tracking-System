@@ -14,17 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
 
+    // Prepare the insert query
     $stmt = $pdo->prepare("INSERT INTO examinations (pet_id, exam_date, medication, start_date, end_date) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$pet_id, $exam_date, $medication, $start_date, $end_date]); 
+    $stmt->execute([$pet_id, $exam_date, $medication, $start_date, $end_date]);
 }
 
-$stmt = $pdo->prepare("SELECT p.pet_name, e.* FROM examinations e JOIN pets p ON e.pet_id = p.id WHERE p.user_id = ? ORDER BY e.exam_date");
+// Fetch the examinations data for the logged-in user
+$stmt = $pdo->prepare("SELECT p.pet_name, e.* FROM examinations e JOIN pets p ON e.pet_id = p.pet_id WHERE p.user_id = ? ORDER BY e.exam_date DESC");
 $stmt->execute([$_SESSION['user_id']]);
-$examinations = $stmt->fetchAll();
+$examinations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("SELECT id, pet_name FROM pets WHERE user_id = ?");
+// Fetch the pets of the logged-in user for the dropdown
+$stmt = $pdo->prepare("SELECT pet_id, pet_name FROM pets WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
-$pets = $stmt->fetchAll();
+$pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -32,61 +35,71 @@ $pets = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Examinations - Veterinary Tracking System</title>
+    <title>Muayene takip - Veteriner takip sistemi</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="data.php">Pet Data</a></li>
-                <li><a href="examinations.php">Examinations</a></li>
-                <li><a href="login.php?logout=1">Logout</a></li>
+                <li><a href="index.php">Ana sayfa</a></li>
+                <li><a href="data.php">Hayvan bilgileri</a></li>
+                <li><a href="examinations.php">Muayene kayıtları</a></li>
+                <li><a href="login.php?logout=1">Çıkış yap</a></li>
             </ul>
         </nav>
     </header>
     <div class="container">
-        <h1>Examinations and Medication Tracking</h1>
+        <h1>Muayene ve İlaç Takibi</h1>
+
+        <!-- Add Examination Form -->
         <form action="examinations.php" method="post">
-            <label for="pet_id">Pet:</label>
+            <label for="pet_id">Hayvan ismi:</label>
             <select id="pet_id" name="pet_id" required>
                 <?php foreach ($pets as $pet): ?>
-                    <option value="<?= $pet['id'] ?>"><?= htmlspecialchars($pet['pet_name']) ?></option>
+                    <option value="<?= $pet['pet_id'] ?>"><?= htmlspecialchars($pet['pet_name']) ?></option>
                 <?php endforeach; ?>
             </select>
 
-            <label for="exam_date">Examination Date:</label>
+            <label for="exam_date">Muayene zamanı:</label>
             <input type="date" id="exam_date" name="exam_date" required>
 
-            <label for="medication">Medication:</label>
+            <label for="medication">İlaç:</label>
             <input type="text" id="medication" name="medication" required>
 
-            <label for="start_date">Start Date:</label>
+            <label for="start_date">Başlangıç tarihi:</label>
             <input type="date" id="start_date" name="start_date" required>
 
-            <label for="end_date">End Date:</label>
+            <label for="end_date">Bitiş tarihi:</label>
             <input type="date" id="end_date" name="end_date" required>
 
-            <input type="submit" value="Add Examination">
+            <input type="submit" value="Muayene ve ilaç bilgilerini ekle">
         </form>
 
-        <h2>Upcoming Examinations and Medications</h2>
-        <?php 
-        $today = new DateTime();
-        foreach ($examinations as $exam): 
-            $exam_date = new DateTime($exam['exam_date']);
-            $days_left = $today->diff($exam_date)->days;
-        ?>
-            <div class="exam-card">
-                <h3>Pet: <?= htmlspecialchars($exam['pet_name']) ?></h3>
-                <p>Examination Date: <?= $exam['exam_date'] ?></p>
-                <p>Days Left: <?= $days_left ?></p>
-                <p>Medication: <?= htmlspecialchars($exam['medication']) ?></p>
-                <p>Start Date: <?= $exam['start_date'] ?></p>
-                <p>End Date: <?= $exam['end_date'] ?></p>
-            </div>
-        <?php endforeach; ?>
+        <h2>Yaklaşan Muayeneler ve İlaçlar</h2>
+
+        <?php if (empty($examinations)): ?>
+            <p>Hiçbir muayene bulunamadı. Lütfen yeni bir muayene ekleyin.</p>
+        <?php else: ?>
+            <?php 
+            $today = new DateTime();
+            foreach ($examinations as $exam): 
+                $exam_date = new DateTime($exam['exam_date']);
+                $days_left = $today->diff($exam_date)->days;
+            ?>
+                <div class="exam-card">
+                    <h3>Hayvan: <?= htmlspecialchars($exam['pet_name']) ?></h3>
+                    <p>Muayene tarihi: <?= $exam['exam_date'] ?></p>
+                    <p>Kalan gün sayısı: <?= $days_left ?></p>
+                    <p>İlaç: <?= htmlspecialchars($exam['medication']) ?></p>
+                    <p>Başlangıç tarihi: <?= $exam['start_date'] ?></p>
+                    <p>Bitiş tarihi: <?= $exam['end_date'] ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
+	<footer>
+        <p>&copy; 2025 Ömer Ali Adalı tarafından tasarlandı.</p>
+    </footer>
 </body>
 </html>
